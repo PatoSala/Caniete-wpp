@@ -4,3 +4,7 @@ const router = express.Router();
 const whatsappController = require("../controllers/whatsappController");
 
 router.get("/init", whatsappController.init);
+
+/* router.get('/qr', whatsappController.qr); */
+
+module.exports = router;

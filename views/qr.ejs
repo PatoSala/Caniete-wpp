@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="/javascripts/jquery.classyqr.js"></script>
+    <title>QR</title>
+    <script>
+        window.addEventListener("load", function() {
+
+            let qrInfo = document.querySelector(".qr-wrapper").dataset.qr;
+
+            console.log(qrInfo);
+
+            $("#qr2").ClassyQR({
+                create: true,
+                type: 'url',
+                url: qrInfo,
+                size: 290
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <p>Una vez escaneado, hacé click en el botón "Continuar"</p>
+    <br>
+
+    <form action="/" method="GET">
+        <button type="submit">Continuar</button>
+    </form>
+
+    <div class="qr-code-wrapper">
+        <div class="qr-wrapper" data-qr ="<%= qr %>">
+            <div id="qr2"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
