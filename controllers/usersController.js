@@ -18,7 +18,7 @@ usersController = {
             user => {
                 console.log(user);
             }
-        )
+        );
 
         res.redirect('/users/login');
     },
