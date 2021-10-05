@@ -2,9 +2,17 @@ const db = require('../database/models');
 const qrcode = require('qrcode-terminal');
 const xlsxFile = require('read-excel-file/node');
 const path = require('path');
+const nodemailer = require('nodemailer');
 const { Client, MessageMedia } = require('whatsapp-web.js');
 
 const clients = require('../clients');
+const transporter = nodemailer.createTransport({
+    service: "hotmail",
+    auth: {
+        user: "psala@uade.edu.ar",
+        pass: "Pumpulos21"
+    }
+});
 
 whatsappController = {
     init: (req, res) => {
@@ -55,19 +63,35 @@ whatsappController = {
         let file = req.files[0].filename;
         let img = undefined;
         let msg = req.body.msg;
+        let phoneNumbers = [5491126040300, 5491154559589, 5491132296692, 5491135227255];
+        let totalMessages = 0;
 
         if (req.files[1]) {
             img = req.files[1].filename;
         };
 
-        if (img != undefined) {
-            let media = MessageMedia.fromFilePath(__dirname + '/../public/files/' + img);
-            clients[idUser].sendMessage("5491126040300@c.us", media, { caption: msg });
-        } else {
-            clients[idUser].sendMessage("5491126040300@c.us", msg);
+        phoneNumbers.forEach(phone => {
+            let wppFormat = phone + '@c.us';
+
+            if (img != undefined) {
+                let media = MessageMedia.fromFilePath(__dirname + '/../public/files/' + img);
+                clients[idUser].sendMessage(wppFormat, media, { caption: msg });
+                totalMessages += 1;
+            } else {
+                clients[idUser].sendMessage(wppFormat, msg);
+                totalMessages += 1;
+            }
+        });
+
+        let emailData = {
+            from: "psala@uade.edu.ar",
+            to: "patosala998@gmail.com",
+            subject: "Total messages notification",
+            text: "Total de mensajes enviados: " + totalMessages,
         }
         
-        res.send("Mensaje enviado");
+        transporter.sendMail(emailData);
+        res.send("Total de mensajes enviados: " + totalMessages);
     }
 
 }
