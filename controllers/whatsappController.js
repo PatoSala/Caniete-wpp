@@ -1,7 +1,6 @@
 const db = require('../database/models');
 const qrcode = require('qrcode-terminal');
-const xlsxFile = require('read-excel-file/node');
-const path = require('path');
+const readXlsxFile = require('read-excel-file/node');
 const nodemailer = require('nodemailer');
 const { Client, MessageMedia } = require('whatsapp-web.js');
 
@@ -63,35 +62,51 @@ whatsappController = {
         let file = req.files[0].filename;
         let img = undefined;
         let msg = req.body.msg;
-        let phoneNumbers = [5491126040300, 5491154559589, 5491132296692, 5491135227255];
+        let phoneNumbers = [];
         let totalMessages = 0;
+        let index;
 
         if (req.files[1]) {
             img = req.files[1].filename;
         };
 
-        phoneNumbers.forEach(phone => {
-            let wppFormat = phone + '@c.us';
-
-            if (img != undefined) {
-                let media = MessageMedia.fromFilePath(__dirname + '/../public/files/' + img);
-                clients[idUser].sendMessage(wppFormat, media, { caption: msg });
-                totalMessages += 1;
-            } else {
-                clients[idUser].sendMessage(wppFormat, msg);
-                totalMessages += 1;
+        readXlsxFile(__dirname + '/../public/files/' + file).then(rows => {
+            for (let i = 0; i < rows.length; i++) {
+                for (let j = 0; j < rows[i].length; i++) {
+                    if (rows[i][j] == "CELULAR") {
+                        index = j;
+                    }
+                }
+                phoneNumbers.push(rows[i][index]);
             }
+
+            console.log(phoneNumbers);
+
+            phoneNumbers.forEach(phone => {
+                let wppFormat = '549' + phone + '@c.us';
+    
+                if (img != undefined) {
+                    let media = MessageMedia.fromFilePath(__dirname + '/../public/files/' + img);
+                    clients[idUser].sendMessage(wppFormat, media, { caption: msg });
+                    totalMessages += 1;
+                } else {
+                    clients[idUser].sendMessage(wppFormat, msg);
+                    totalMessages += 1;
+                }
+            });
+    
+            let emailData = {
+                from: "psala@uade.edu.ar",
+                to: "patosala998@gmail.com",
+                subject: "Total messages notification",
+                text: "Total de mensajes enviados: " + totalMessages,
+            }
+            
+            transporter.sendMail(emailData);
+            res.send("Total de mensajes enviados: " + totalMessages);
         });
 
-        let emailData = {
-            from: "psala@uade.edu.ar",
-            to: "patosala998@gmail.com",
-            subject: "Total messages notification",
-            text: "Total de mensajes enviados: " + totalMessages,
-        }
         
-        transporter.sendMail(emailData);
-        res.send("Total de mensajes enviados: " + totalMessages);
     }
 
 }
