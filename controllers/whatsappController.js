@@ -71,19 +71,13 @@ whatsappController = {
         };
 
         readXlsxFile(__dirname + '/../public/files/' + file).then(rows => {
-            for (let i = 0; i < rows.length; i++) {
-                for (let j = 0; j < rows[i].length; i++) {
-                    if (rows[i][j] == "CELULAR") {
-                        index = j;
-                    }
-                }
-                phoneNumbers.push(rows[i][index]);
+            for (let i = 1; i < rows.length; i++) {
+                phoneNumbers.push(rows[i][5]);
             }
 
-            console.log(phoneNumbers);
-
             phoneNumbers.forEach(phone => {
-                let wppFormat = '549' + phone + '@c.us';
+                phone = "" + phone + "";
+                wppFormat = "549" + phone.substring(0,1) + "1" + phone.substring(2) + "@c.us";
     
                 if (img != undefined) {
                     let media = MessageMedia.fromFilePath(__dirname + '/../public/files/' + img);
