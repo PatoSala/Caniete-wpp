@@ -12,4 +12,6 @@ router.post('/register', usersController.registerProcess);
 
 router.post('/login', usersController.loginProcess);
 
+router.post('/logout', usersController.logOut);
+
 module.exports = router;

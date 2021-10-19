@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= totalMessages %> enviados</title>
+</head>
+<body>
+    <h2>Cantidad de mensajes enviados: <%= totalMessages %></h2>
+    <form action="/client/sendmessage" method="get">
+        <button type="submit">Mandar denuevo</button>
+    </form>
+    <form action="/" method="get">
+        <button type="submit">Home</button>
+    </form>
+</body>
+</html>

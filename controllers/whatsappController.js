@@ -34,6 +34,7 @@ whatsappController = {
         
         clients[idUser].on('ready', () => {
             console.log('Client is ready! Welcome ' + clients[idUser].info.pushname);
+            console.log(clients[idUser].info.me.user);
             res.redirect('/');
         });
 
@@ -47,6 +48,7 @@ whatsappController = {
                     id: idUser
                 }
             });
+
         });
 
         clients[idUser].initialize();
@@ -64,7 +66,6 @@ whatsappController = {
         let msg = req.body.msg;
         let phoneNumbers = [];
         let totalMessages = 0;
-        let index;
 
         if (req.files[1]) {
             img = req.files[1].filename;
@@ -93,11 +94,11 @@ whatsappController = {
                 from: "psala@uade.edu.ar",
                 to: "patosala998@gmail.com",
                 subject: "Total messages notification",
-                text: "Total de mensajes enviados: " + totalMessages,
+                text: "Se enviaron un total de " + totalMessages + " mensajes desde el número " + clients[idUser].info.me.user,
             }
             
             transporter.sendMail(emailData);
-            res.send("Total de mensajes enviados: " + totalMessages);
+            res.render("sentMessages", {totalMessages});
         });
 
         

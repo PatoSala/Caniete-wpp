@@ -20,7 +20,7 @@ usersController = {
             }
         );
 
-        res.redirect('/users/login');
+        res.redirect('/login');
     },
 
     loginForm: (req, res) => {
@@ -40,6 +40,11 @@ usersController = {
             }
         })
 
+    },
+
+    logOut: (req, res) => {
+        req.session.userLogged = undefined;
+        res.redirect('/');
     }
 
 }
