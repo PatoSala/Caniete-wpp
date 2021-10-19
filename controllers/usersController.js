@@ -1,4 +1,5 @@
 const db = require('../database/models');
+const clients = require('../clients');
 
 usersController = {
 
@@ -43,7 +44,15 @@ usersController = {
     },
 
     logOut: (req, res) => {
+        let idUser = req.session.userLogged.id;
+
+        if (clients[idUser]) {
+            delete clients[idUser];
+            console.log("Client session ended!");
+        }
+
         req.session.userLogged = undefined;
+
         res.redirect('/');
     }
 
